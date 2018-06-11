@@ -12,8 +12,8 @@ session_start();
 
 if(!isset($_GET['state'])||$_GET['state'] != $_SESSION['state']){
     $state = getRandStr(8);
-    header("location: http://myauther.com/oauth2.0/authorize.php??response_type=code\
-    &client_id=s6BhdRkqt3&state=$state&redirect_uri=http%3A%2f%2fmyclient.com%2fauth_login.php%3Fa%3Dc");
+    $_SESSION['state'] = $state;
+    header("location: http://myauther.com/oauth2.0/authorize.php?response_type=code&client_id=s6BhdRkqt3&scope=read&state=$state&redirect_uri=http%3A%2f%2fmyclient.com%2fauth_login.php%3Fa%3Dc");
     exit();
 }
 
@@ -23,8 +23,8 @@ $url = "http://myauther.com/oauth2.0/getToken.php";
 $queryString = "secret_code=adHexbgtxHGtcMoh13&grant_type=authorization_code&code=$authorCode";
 $data = doCurlPostRequest($url,$queryString);
 
-
-$json_data = json_decode($data);
+// echo $data;
+$json_data = json_decode($data, true);
 //var_dump($json_data);
 $accessToken = $json_data['access_token'];
 $refresheToken = $json_data['refresh_token'];
@@ -45,10 +45,10 @@ $mysqli_stmt->close();
 $mysqli->close();
 
 //用accessToken去请求firstName, lastName
-$url = "http://myauther.com/auth2.0/me.php";
+$url = "http://myauther.com/oauth2.0/me.php";
 $queryString = "secret_code=adHexbgtxHGtcMoh13&access_token=$accessToken";
 $data = doCurlPostRequest($url, $queryString);
-$json_data = json_decode($data);
+$json_data = json_decode($data, true);
 $firstName = $json_data['firstname'];
 $lastName = $json_data['lastname'];
 

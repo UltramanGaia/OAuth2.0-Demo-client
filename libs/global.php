@@ -46,6 +46,11 @@ function doCurlPostRequest($url,$requestString,$timeout = 5){
         return false;
     }
     $con = curl_init((string)$url);
+
+    curl_setopt($con, CURLOPT_PROXYAUTH, CURLAUTH_BASIC); //代理认证模式  
+    curl_setopt($con, CURLOPT_PROXY, "127.0.0.1"); //代理服务器地址   
+    curl_setopt($con, CURLOPT_PROXYPORT, 8080); //代理服务器端口
+
     curl_setopt($con, CURLOPT_HEADER, false);
     curl_setopt($con, CURLOPT_POSTFIELDS, $requestString);
     curl_setopt($con, CURLOPT_POST,true);
